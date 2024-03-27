@@ -23,6 +23,7 @@ class HomeViewController: BaseViewController {
         if let searchField = view.searchBar.value(forKey: "searchField") as? UITextField, let close = searchField.value(forKey: "_clearButton") as? UIButton {
             close.addTarget(self, action: #selector(closeSearch), for: .touchUpInside)
         }
+        view.segmentControl.addTarget(self, action: #selector(valueChanged(_:)), for: .valueChanged)
         return view
     }()
     
@@ -136,6 +137,10 @@ private extension HomeViewController {
         }
         self.viewModel.setCurrentState(.common)
         
+    }
+    
+    @objc func valueChanged(_ sender: UISegmentedControl) {
+        self.viewModel.toggleCurrentType()
     }
 }
 

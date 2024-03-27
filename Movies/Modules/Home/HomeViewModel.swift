@@ -17,7 +17,11 @@ final class HomeViewModel: BaseViewModel {
     private var soonMoviesModel: [Movies] = []
     private var genres: [Int : String] = [:]
     
-    private var currentType: MoviesType = .now
+    private var currentType: MoviesType = .now {
+        didSet {
+            self.delegate?.reloadData()
+        }
+    }
     private var currentState: ModelState = .common {
         didSet {
             self.delegate?.reloadData()
