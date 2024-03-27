@@ -23,4 +23,8 @@ extension UIImage {
     class func profileTab() -> UIImage? {
         UIImage(named: "profile")
     }
+    
+    class func searchIcon() -> UIImage? {
+        UIImage(named: "search")
+    }
 }

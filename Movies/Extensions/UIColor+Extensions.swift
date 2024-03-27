@@ -39,4 +39,8 @@ extension UIColor {
     class func unselectedText() -> UIColor {
         .white.withAlphaComponent(0.5)
     }
+    
+    class func searchBackground() -> UIColor {
+        UIColor(hex: "2B3543")
+    }
 }

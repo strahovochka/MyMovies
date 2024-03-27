@@ -13,12 +13,16 @@ enum MoviesType: String, CaseIterable {
     case soon = "Coming Soon"
 }
 
-class HomeViewController: UIViewController {
+class HomeViewController: BaseViewController {
 
     lazy var mainView: HomeView = {
         let view = HomeView()
         view.collectionView.delegate = self
         view.collectionView.dataSource = self
+        view.searchBar.delegate = self
+        if let searchField = view.searchBar.value(forKey: "searchField") as? UITextField, let close = searchField.value(forKey: "_clearButton") as? UIButton {
+            close.addTarget(self, action: #selector(closeSearch), for: .touchUpInside)
+        }
         return view
     }()
     
@@ -26,15 +30,6 @@ class HomeViewController: UIViewController {
         var model = HomeViewModel(delegate: self)
         return model
     }()
-    
-    init(controllerType: TabItem) {
-        super.init(nibName: nil, bundle: nil)
-        self.tabBarItem = UITabBarItem(title: nil, image: controllerType.tabImage, selectedImage: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
     
     override func loadView() {
         super.loadView()
@@ -46,6 +41,14 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpNavBar()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        closeSearch()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        closeSearch()
     }
 }
 
@@ -78,15 +81,63 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 }
 
+extension HomeViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.viewModel.setCurrentState(.search(searchText))
+        self.reloadData()
+    }
+    
+}
+
 private extension HomeViewController {
     func setUpNavBar() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationBar.tintColor = .white
         self.navigationItem.title = "Star Movie"
+        
+        let button = UIButton()
+        button.setImage(.searchIcon(), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(openSearch), for: .touchUpInside)
+    
+        self.navigationController?.navigationBar.addSubview(button)
+        button.snp.remakeConstraints { make in
+            make.height.width.equalTo(24)
+            make.trailing.equalToSuperview().inset(18)
+            make.bottom.equalToSuperview().inset(18)
+        }
+    }
+    
+    @objc func openSearch() {
+        mainView.searchBar.alpha = 0
+        UIView.animate(withDuration: 0.3) {
+            self.navigationController?.navigationBar.prefersLargeTitles = false
+            self.navigationController?.navigationBar.subviews.forEach({ view in
+                if view is UIButton {
+                    view.removeFromSuperview()
+                }
+            })
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: self.mainView.searchBar)
+            self.mainView.searchBar.placeholder = "Search"
+            self.mainView.searchBar.alpha = 1
+        } completion: { finished in
+            self.mainView.searchBar.becomeFirstResponder()
+        }
+
+    }
+    
+    @objc func closeSearch() {
+        UIView.animate(withDuration: 0.2) {
+            self.mainView.searchBar.alpha = 0.5
+        } completion: { finished in
+            self.navigationItem.setLeftBarButton(nil, animated: true)
+            self.setUpNavBar()
+        }
+        self.viewModel.setCurrentState(.common)
+        
     }
 }
-
-
 
 extension HomeViewController: BaseViewModelDelegate {
     func reloadData() {

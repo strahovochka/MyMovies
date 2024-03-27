@@ -37,6 +37,15 @@ class HomeView: UIView {
         return view
     }()
     
+    lazy var searchBar: UISearchBar = {
+        var bar = UISearchBar()
+        bar.backgroundColor = .clear
+        let searchBarSize = CGSize(width: screenSize.width - 36, height: 24)
+        bar.frame = CGRect(origin: .zero, size: searchBarSize)
+        bar.searchTextField.textColor = .white
+        return bar
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureView()

@@ -7,12 +7,22 @@
 
 import UIKit
 
+enum ModelState {
+    case common
+    case search(String)
+}
+
 final class HomeViewModel: BaseViewModel {
     private var nowMoviesModel: [Movies] = []
     private var soonMoviesModel: [Movies] = []
     private var genres: [Int : String] = [:]
     
     private var currentType: MoviesType = .now
+    private var currentState: ModelState = .common {
+        didSet {
+            self.delegate?.reloadData()
+        }
+    }
     
     func getContent() {
         networkManager.fetchComingNow { [weak self] response in
@@ -55,12 +65,28 @@ final class HomeViewModel: BaseViewModel {
         }
     }
     
+    func setCurrentState(_ state: ModelState) {
+        self.currentState = state
+    }
+    
     func getCurrentModel() -> [Movies] {
-        switch currentType {
-        case .now:
-            return nowMoviesModel
-        case .soon:
-            return soonMoviesModel
+        switch currentState {
+        case .common:
+            switch currentType {
+            case .now:
+                return nowMoviesModel
+            case .soon:
+                return soonMoviesModel
+            }
+        case .search(let text):
+            var res: [Movies] = []
+            switch currentType {
+            case .now:
+                res = nowMoviesModel
+            case .soon:
+                res = soonMoviesModel
+            }
+            return res.filter { $0.title.replacingOccurrences(of: " ", with: "").lowercased().contains(text.lowercased()) }
         }
     }
     
