@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum Response<T> {
+    case success(T)
+    case error(String)
+}

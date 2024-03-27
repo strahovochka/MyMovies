@@ -6,3 +6,14 @@
 //
 
 import Foundation
+import UIKit
+
+let screenSize = UIScreen.main.bounds
+
+extension UICollectionView {
+    func register(_ cell: BaseCollectionViewCell.Type) {
+        self.register(cell, forCellWithReuseIdentifier: cell.cellIdn())
+    }
+}
+
+

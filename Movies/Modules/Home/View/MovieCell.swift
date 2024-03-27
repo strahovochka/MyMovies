@@ -6,7 +6,99 @@
 //
 
 import UIKit
+import SnapKit
 
-class MovieCell: UICollectionViewCell {
+class MovieCell: BaseCollectionViewCell {
+    lazy var imageView: UIImageView = {
+        var image = UIImageView()
+        image.contentMode = .scaleAspectFill
+        return image
+    }()
     
+    lazy var starStack: UIStackView = {
+        var stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .leading
+        stack.distribution = .equalSpacing
+        stack.spacing = 2
+        return stack
+    }()
+    
+    lazy var title: UILabel = {
+        var label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        return label
+    }()
+    
+    lazy var genreAndTime: UILabel = {
+        var label = UILabel()
+        label.textColor = .white.withAlphaComponent(0.5)
+        label.font = .systemFont(ofSize: 12)
+        return label
+    }()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.imageView.image = nil
+        self.starStack.arrangedSubviews.forEach { view in
+            view.removeFromSuperview()
+        }
+    }
+    
+    override func configureView() {
+        addSubview(imageView)
+        addSubview(title)
+        addSubview(genreAndTime)
+    }
+    
+    override func makeConstraints() {
+        imageView.snp.remakeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(UIScreen.main.bounds.height * 0.31)
+        }
+        title.snp.remakeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(37)
+            make.leading.trailing.equalToSuperview()
+        }
+        genreAndTime.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalTo(title.snp.bottom).offset(4)
+        }
+    }
+    
+    func configureCell(model: Movies) {
+        title.text = model.title
+        
+        let rating = round((model.voteAverage) / 2 * 10) / 10.0
+        for i in 0..<5 {
+            let diff = rating - Double(i)
+            switch i {
+            case _ where diff >= 1:
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFit
+                imageView.image = UIImage(systemName: "star.fill")
+                imageView.tintColor = UIColor(hex: "#FFC045")
+                starStack.addArrangedSubview(imageView)
+            case _ where (diff > 0 && diff < 1):
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFit
+                imageView.image = UIImage(systemName: "star.leadinghalf.filled")
+                imageView.tintColor = UIColor(hex: "#FFC045")
+                starStack.addArrangedSubview(imageView)
+            default:
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFit
+                imageView.image = UIImage(systemName: "star")
+                imageView.tintColor = UIColor(hex: "#FFC045")
+                starStack.addArrangedSubview(imageView)
+            }
+        }
+        addSubview(starStack)
+        starStack.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalTo(imageView.snp.bottom).offset(16)
+            make.height.equalTo(UIScreen.main.bounds.height * 0.02)
+        }
+    }
 }
