@@ -14,6 +14,8 @@ class DetailsView: UIView {
         var tableView = UITableView()
         tableView.separatorColor = .clear
         tableView.register(DetailsCellType.main.cell)
+        tableView.register(DetailsCellType.synopsis.cell)
+        tableView.backgroundColor = .clear
         return tableView
     }()
     

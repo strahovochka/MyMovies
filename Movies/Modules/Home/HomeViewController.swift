@@ -29,14 +29,15 @@ class HomeViewController: BaseViewController {
     
     lazy var viewModel: HomeViewModel = {
         var model = HomeViewModel(delegate: self)
-//        viewModel.getContent()
         return model
     }()
     
     override func loadView() {
         super.loadView()
-        viewModel.getContent()
         self.view = mainView
+        Task {
+            await viewModel.getContent()
+        }
         self.view.backgroundColor = .backgroundColor()
     }
     
@@ -63,6 +64,25 @@ class HomeViewController: BaseViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         closeSearch(duration: 0.2)
+    }
+    
+    override func setUpNavBar() {
+        super.setUpNavBar()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationItem.title = "Star Movie"
+        
+        let button = UIButton()
+        button.setImage(.searchIcon(), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(openSearch), for: .touchUpInside)
+    
+        self.navigationController?.navigationBar.addSubview(button)
+        button.snp.remakeConstraints { make in
+            make.height.width.equalTo(24)
+            make.trailing.equalToSuperview().inset(18)
+            make.bottom.equalToSuperview().inset(18)
+        }
     }
 }
 
@@ -111,23 +131,6 @@ extension HomeViewController: UISearchBarDelegate {
 }
 
 private extension HomeViewController {
-    func setUpNavBar() {
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.navigationBar.tintColor = .white
-        self.navigationItem.title = "Star Movie"
-        
-        let button = UIButton()
-        button.setImage(.searchIcon(), for: .normal)
-        button.tintColor = .white
-        button.addTarget(self, action: #selector(openSearch), for: .touchUpInside)
-    
-        self.navigationController?.navigationBar.addSubview(button)
-        button.snp.remakeConstraints { make in
-            make.height.width.equalTo(24)
-            make.trailing.equalToSuperview().inset(18)
-            make.bottom.equalToSuperview().inset(18)
-        }
-    }
     
     @objc func openSearch() {
         mainView.searchBar.alpha = 0

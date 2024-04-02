@@ -16,7 +16,13 @@ final class HomeViewModel: BaseViewModel {
     private var nowMoviesModel: [Movies] = []
     private var soonMoviesModel: [Movies] = []
     private var genres: [Int : String] = [:]
-    private var images: [Int : UIImage?] = [:]
+    private var images: [Int : UIImage?] = [:] {
+        didSet {
+            DispatchQueue.main.async {
+                self.delegate?.reloadData()
+            }
+        }
+    }
     
     private var currentType: MoviesType = .now {
         didSet {
@@ -29,36 +35,39 @@ final class HomeViewModel: BaseViewModel {
         }
     }
     
-    func getContent() {
-        networkManager.fetchComingNow { [weak self] response in
-            guard let self = self else { return }
-            switch response {
-            case let .success(movies):
-                self.nowMoviesModel = movies
-                self.getImages(for: movies)
-            case let .error(descr):
-                print(descr)
-            
+    func getContent() async {
+        await withCheckedContinuation { continuation in
+            networkManager.fetchComingNow { [weak self] response in
+                guard let self = self else { return }
+                switch response {
+                case let .success(movies):
+                    self.nowMoviesModel = movies
+                    self.getImages(for: movies)
+                case let .error(descr):
+                    print(descr)
+                
+                }
             }
-        }
-        networkManager.fetchComingSoon { [weak self] response in
-            guard let self = self else { return }
-            switch response {
-            case let .success(movies):
-                self.soonMoviesModel = movies
-                self.getImages(for: movies)
-            case let .error(descr):
-                print(descr)
-            
+            networkManager.fetchComingSoon { [weak self] response in
+                guard let self = self else { return }
+                switch response {
+                case let .success(movies):
+                    self.soonMoviesModel = movies
+                    self.getImages(for: movies)
+                case let .error(descr):
+                    print(descr)
+                
+                }
             }
-        }
-        NetworkManager.shared.fetchGenres { [weak self] response in
-            guard let self = self else { return }
-            switch response {
-            case let .success(genres):
-                self.genres = genres
-            case let .error(descr):
-                print(descr)
+            NetworkManager.shared.fetchGenres { [weak self] response in
+                guard let self = self else { return }
+                switch response {
+                case let .success(genres):
+                    self.genres = genres
+                case let .error(descr):
+                    print(descr)
+                }
+                continuation.resume()
             }
         }
     }

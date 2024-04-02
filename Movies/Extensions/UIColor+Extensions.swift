@@ -40,7 +40,15 @@ extension UIColor {
         .white.withAlphaComponent(0.5)
     }
     
+    class func plainText() -> UIColor {
+        .white.withAlphaComponent(0.7)
+    }
+    
     class func searchBackground() -> UIColor {
         UIColor(hex: "2B3543")
+    }
+    
+    class func accentColor() -> UIColor {
+        UIColor(hex: "47CFFF")
     }
 }

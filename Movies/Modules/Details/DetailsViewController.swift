@@ -30,7 +30,7 @@ final class DetailsViewController: BaseViewController {
         var view = DetailsView()
         view.tableView.delegate = self
         view.tableView.dataSource = self
-        view.tableView.backgroundColor = .clear
+        //view.tableView.estimatedRowHeight = UITableView.automaticDimension
         return view
     }()
     
@@ -56,26 +56,8 @@ final class DetailsViewController: BaseViewController {
         setUpNavBar()
     }
     
-}
-
-extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
-        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image)
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        517
-    }
-}
-
-private extension DetailsViewController {
-    func setUpNavBar() {
+    override func setUpNavBar() {
+        super.setUpNavBar()
         let button = UIButton()
         button.setImage(.shareIcon(), for: .normal)
         button.tintColor = .white
@@ -83,6 +65,40 @@ private extension DetailsViewController {
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
     }
+    
+}
+
+extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
+        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image)
+        cell.selectionStyle = .none
+        cell.tag = indexPath.row
+        if let cell = cell as? SynopsisTableViewCell {
+            cell.delegate = self
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 1 {
+            return UITableView.automaticDimension
+        }
+        return currentType.cells[indexPath.row].heightForRow
+    }
+}
+
+extension DetailsViewController: SynopsisDelegate {
+    func reloadData() {
+        self.mainView.tableView.reloadData()
+    }
+}
+
+private extension DetailsViewController {
     
     @objc func share() {
         

@@ -23,6 +23,8 @@ enum DetailsCellType {
         switch self {
         case .main:
             return PosterTableViewCell.self
+        case .synopsis:
+            return SynopsisTableViewCell.self
         default:
             return DetailsCell.self
         }
@@ -31,7 +33,9 @@ enum DetailsCellType {
     var heightForRow: CGFloat {
         switch self {
         case .main:
-            return 459
+            return 517
+        case .synopsis:
+            return 142
         default:
             return 100
         }

@@ -28,5 +28,10 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
        
     }
+    
+    func setUpNavBar() {
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+         navigationController?.navigationBar.shadowImage = UIImage()
+    }
 
 }
