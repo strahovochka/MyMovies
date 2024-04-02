@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol BaseViewControllerDelegate: AnyObject {
+    func showDetails(object: Movies, genres: [String], image: UIImage)
+}
+
 class BaseViewController: UIViewController {
+    
+    weak var flowDelegate: BaseViewControllerDelegate?
     
     init(controllerType: TabItem) {
         super.init(nibName: nil, bundle: nil)

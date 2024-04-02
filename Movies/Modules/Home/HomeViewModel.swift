@@ -16,6 +16,7 @@ final class HomeViewModel: BaseViewModel {
     private var nowMoviesModel: [Movies] = []
     private var soonMoviesModel: [Movies] = []
     private var genres: [Int : String] = [:]
+    private var images: [Int : UIImage?] = [:]
     
     private var currentType: MoviesType = .now {
         didSet {
@@ -34,6 +35,7 @@ final class HomeViewModel: BaseViewModel {
             switch response {
             case let .success(movies):
                 self.nowMoviesModel = movies
+                self.getImages(for: movies)
             case let .error(descr):
                 print(descr)
             
@@ -44,6 +46,7 @@ final class HomeViewModel: BaseViewModel {
             switch response {
             case let .success(movies):
                 self.soonMoviesModel = movies
+                self.getImages(for: movies)
             case let .error(descr):
                 print(descr)
             
@@ -56,6 +59,15 @@ final class HomeViewModel: BaseViewModel {
                 self.genres = genres
             case let .error(descr):
                 print(descr)
+            }
+        }
+    }
+    
+    private func getImages(for movies: [Movies]) {
+        movies.forEach { movie in
+            loadImageWith(api: .poster(movie.posterPath)) { [weak self] image in
+                guard let self = self else { return }
+                self.images[movie.id] = image
             }
         }
     }
@@ -90,7 +102,7 @@ final class HomeViewModel: BaseViewModel {
             case .soon:
                 res = soonMoviesModel
             }
-            return res.filter { $0.title.replacingOccurrences(of: " ", with: "").lowercased().contains(text.lowercased()) }
+            return text == "" ? res : res.filter { $0.title.localizedCaseInsensitiveContains(text) }
         }
     }
     
@@ -113,6 +125,10 @@ final class HomeViewModel: BaseViewModel {
             }
         }
         return res
+    }
+    
+    func getImageFor(id: Int) -> UIImage? {
+        images[id] ?? UIImage()
     }
     
 }

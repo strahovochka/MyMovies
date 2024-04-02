@@ -59,12 +59,11 @@ class NetworkManager: NetworkProtocol {
                             if let backPath = moviesData["backdrop_path"] as? String,
                                let genreIds = moviesData["genre_ids"] as? [Int],
                                let id = moviesData["id"] as? Int,
-                               let originalLanguage = moviesData["original_language"] as? String,
                                let overview = moviesData["overview"] as? String,
                                let posterPath = moviesData["poster_path"] as? String,
                                let title = moviesData["title"] as? String,
                                let voteAverage = moviesData["vote_average"] as? Double {
-                                res.append(Movies(posterPath: posterPath, genreIds: genreIds, id: id, backdropPath: backPath, originalLanguage: originalLanguage, overview: overview, runtime: nil, title: title, voteAverage: voteAverage))
+                                res.append(Movies(posterPath: posterPath, genreIds: genreIds, id: id, backdropPath: backPath, overview: overview, title: title, voteAverage: voteAverage))
                             }
                         }
                         completition(.success(res))

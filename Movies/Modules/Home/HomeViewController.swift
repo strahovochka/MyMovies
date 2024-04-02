@@ -29,6 +29,7 @@ class HomeViewController: BaseViewController {
     
     lazy var viewModel: HomeViewModel = {
         var model = HomeViewModel(delegate: self)
+//        viewModel.getContent()
         return model
     }()
     
@@ -44,12 +45,24 @@ class HomeViewController: BaseViewController {
         setUpNavBar()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        closeSearch()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpNavBar()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.navigationBar.subviews.forEach({ view in
+            if view is UIButton {
+                view.removeFromSuperview()
+            }
+        })
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.navigationBar.layoutIfNeeded()
+        closeSearch(duration: 0)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        closeSearch()
+        closeSearch(duration: 0.2)
     }
 }
 
@@ -67,9 +80,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         cell.configureCell(model: movie)
         cell.genreAndTime.text = viewModel.getGenreName(for: movie.genreIds)
-        viewModel.loadImageWith(api: .poster(viewModel.getCurrentModel()[indexPath.row].posterPath)) { image in
-            cell.imageView.image = image
-        }
+        cell.imageView.image = viewModel.getImageFor(id: movie.id)
         return cell
     }
     
@@ -79,6 +90,14 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 24, left: 6, bottom: 0, right: 6)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let object = viewModel.getCurrentModel()[indexPath.row]
+        let genres = viewModel.getGenresNames(for: object.genreIds)
+        let image = viewModel.getImageFor(id: object.id) ?? UIImage()
+        self.flowDelegate?.showDetails(object: object, genres: genres, image: image)
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
 
@@ -116,7 +135,7 @@ private extension HomeViewController {
             self.navigationController?.navigationBar.prefersLargeTitles = false
             self.navigationController?.navigationBar.subviews.forEach({ view in
                 if view is UIButton {
-                    view.removeFromSuperview()
+                    view.isHidden = true
                 }
             })
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: self.mainView.searchBar)
@@ -128,12 +147,16 @@ private extension HomeViewController {
 
     }
     
-    @objc func closeSearch() {
-        UIView.animate(withDuration: 0.2) {
+    @objc func closeSearch(duration: TimeInterval = 0.2) {
+        UIView.animate(withDuration: duration) {
             self.mainView.searchBar.alpha = 0.5
         } completion: { finished in
             self.navigationItem.setLeftBarButton(nil, animated: true)
-            self.setUpNavBar()
+            self.navigationController?.navigationBar.subviews.forEach({ view in
+                if view is UIButton {
+                    view.isHidden = false
+                }
+            })
         }
         self.viewModel.setCurrentState(.common)
         

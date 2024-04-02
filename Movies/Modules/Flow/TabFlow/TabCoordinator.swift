@@ -13,12 +13,12 @@ enum TabItem: Int, CaseIterable {
     case notifications
     case profile
     
-    var controller: UIViewController {
+    var controller: BaseViewController {
         switch self {
         case .home:
             return HomeViewController(controllerType: self)
         default:
-            return UIViewController()
+            return BaseViewController(controllerType: .notifications)
         }
     }
     
@@ -84,8 +84,10 @@ class TabCoordinator: NSObject, TabCoordinatorProtocol {
         nav.setNavigationBarHidden(false, animated: false)
         
         nav.tabBarItem = UITabBarItem(title: nil, image: item.tabImage, tag: item.rawValue)
+        let vc = item.controller
+        vc.flowDelegate = self
         
-        nav.pushViewController(item.controller, animated: true)
+        nav.pushViewController(vc, animated: true)
         
         return nav
     }
@@ -107,4 +109,15 @@ class TabCoordinator: NSObject, TabCoordinatorProtocol {
 
 extension TabCoordinator: UITabBarControllerDelegate {
     
+}
+
+extension TabCoordinator: BaseViewControllerDelegate {
+    func showDetails(object: Movies, genres: [String], image: UIImage) {
+        let vc = DetailsViewController(object: object, genres: genres, image: image)
+        vc.flowDelegate = self
+        vc.hidesBottomBarWhenPushed = true
+        if let currentVC = self.tabBarController.viewControllers?[self.tabBarController.selectedIndex] {
+            currentVC.show(vc, sender: nil)
+        }
+    }
 }

@@ -41,9 +41,7 @@ class MovieCell: BaseCollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.imageView.image = nil
-        self.starStack.arrangedSubviews.forEach { view in
-            view.removeFromSuperview()
-        }
+        self.starStack.removeAllArrangedSubviews()
     }
     
     override func configureView() {
@@ -70,35 +68,12 @@ class MovieCell: BaseCollectionViewCell {
     func configureCell(model: Movies) {
         title.text = model.title
         
-        let rating = round((model.voteAverage) / 2 * 10) / 10.0
-        for i in 0..<5 {
-            let diff = rating - Double(i)
-            switch i {
-            case _ where diff >= 1:
-                let imageView = UIImageView()
-                imageView.contentMode = .scaleAspectFit
-                imageView.image = UIImage(systemName: "star.fill")
-                imageView.tintColor = UIColor(hex: "#FFC045")
-                starStack.addArrangedSubview(imageView)
-            case _ where (diff > 0 && diff < 1):
-                let imageView = UIImageView()
-                imageView.contentMode = .scaleAspectFit
-                imageView.image = UIImage(systemName: "star.leadinghalf.filled")
-                imageView.tintColor = UIColor(hex: "#FFC045")
-                starStack.addArrangedSubview(imageView)
-            default:
-                let imageView = UIImageView()
-                imageView.contentMode = .scaleAspectFit
-                imageView.image = UIImage(systemName: "star")
-                imageView.tintColor = UIColor(hex: "#FFC045")
-                starStack.addArrangedSubview(imageView)
-            }
-        }
+        starStack.makeStarRating(of: model.voteAverage)
         addSubview(starStack)
         starStack.snp.remakeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalTo(imageView.snp.bottom).offset(16)
-            make.height.equalTo(UIScreen.main.bounds.height * 0.02)
+            make.height.equalTo(screenSize.height * 0.02)
         }
     }
 }

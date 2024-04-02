@@ -27,4 +27,8 @@ extension UIImage {
     class func searchIcon() -> UIImage? {
         UIImage(named: "search")
     }
+    
+    class func shareIcon() -> UIImage? {
+        UIImage(named: "share")
+    }
 }
