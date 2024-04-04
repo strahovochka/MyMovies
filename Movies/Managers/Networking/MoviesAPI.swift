@@ -14,6 +14,7 @@ enum MoviesAPI {
     case genres
     case cast(Int)
     case photos(Int)
+    case videos(Int)
     
     var pass: String {
         switch self {
@@ -29,6 +30,8 @@ enum MoviesAPI {
             return "/movie/\(id)/credits"
         case .photos(let id):
             return "/movie/\(id)/images"
+        case .videos(let id):
+            return "/movie/\(id)/videos"
         }
     }
     

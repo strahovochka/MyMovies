@@ -108,7 +108,7 @@ class NetworkManager: NetworkProtocol {
     }
     
     func fetchPhotosData(with api: MoviesAPI, completition: @escaping (Response<[String]>) -> Void) {
-        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { completition(.error("Unable to form url "))
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { completition(.error("Unable to form url"))
             return
         }
         let request = URLRequest(url: url)
@@ -137,6 +137,29 @@ class NetworkManager: NetworkProtocol {
                 completition(.error("No data acquired"))
             }
         }.resume()
+    }
+    
+    func fetchVideoData(with api: MoviesAPI, completition: @escaping (Response<[String]>) -> Void) {
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { return }
+        let request = URLRequest(url: url)
+        var res = [String]()
         
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
+                    if let videosData = json?["results"] as? [[String : Any]] {
+                        for videoData in videosData {
+                            if let key = videoData["key"] as? String {
+                                res.append(key)
+                            }
+                        }
+                        completition(.success(res))
+                    }
+                } catch {
+                    completition(.error(error.localizedDescription))
+                }
+            }
+        }.resume()
     }
 }

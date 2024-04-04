@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 final class DetailsViewModel {
     private(set) var movie: Movies 
@@ -13,6 +14,7 @@ final class DetailsViewModel {
     private(set) var image: UIImage
     private(set) var cast: [Cast]?
     private(set) var photos: [UIImage]?
+    private(set) var videosKeys: [UIImage]?
     
     weak var delegate: BaseViewModelDelegate?
     
@@ -47,6 +49,18 @@ final class DetailsViewModel {
                 let urls = photosPaths.map { URL(string: "\(MoviesAPI.poster($0).pass)")}
                 self.loadImages(urls: urls) { images in
                     self.photos = images
+                }
+            case .error(let descr):
+                print(descr)
+            }
+        }
+        NetworkManager.shared.fetchVideoData(with: .videos(movie.id)) { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .success(let keys):
+                let urls = keys.map { URL(string: "https://img.youtube.com/vi/\($0)/0.jpg") }
+                self.loadImages(urls: urls) { images in
+                    self.videosKeys = images
                 }
             case .error(let descr):
                 print(descr)

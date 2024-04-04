@@ -8,7 +8,9 @@
 import UIKit
 import SnapKit
 
-class PhotosCell: DetailsCell {
+//TODO: Make separate video thumbnail cell class
+
+class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     lazy var title: UILabel = {
         var label = UILabel()
@@ -40,6 +42,9 @@ class PhotosCell: DetailsCell {
     }()
     
     private var photos: [UIImage] = []
+    private var videosKeys: [UIImage] = []
+    
+    var isPhotos: Bool = true
     
     override func configureView() {
         super.configureView()
@@ -63,25 +68,31 @@ class PhotosCell: DetailsCell {
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
-        if let photos = photos {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
+        if let photos = photos, let videos = videos {
             self.photos = photos
+            self.videosKeys = videos
             self.collectionView.reloadData()
         }
     }
     
-}
-
-extension PhotosCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    //MARK: -Collection View
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        photos.count
+        isPhotos ? photos.count : videosKeys.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.cellIdn(), for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell () }
-        cell.imageView.image = photos[indexPath.row]
-        cell.isUserInteractionEnabled = false
-        return cell
+        if isPhotos {
+            cell.imageView.image = photos[indexPath.row]
+            cell.isUserInteractionEnabled = false
+            return cell
+        } else {
+            cell.imageView.image = videosKeys[indexPath.row]
+            cell.isUserInteractionEnabled = false
+            return cell
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

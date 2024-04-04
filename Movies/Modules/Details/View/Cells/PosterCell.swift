@@ -120,7 +120,7 @@ class PosterCell: DetailsCell {
         
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
         title.text = model.title
         rating.text = "\(round(model.voteAverage / 2 * 10) / 10)/5"
         self.genres.text = genres.joined(separator: ", ")

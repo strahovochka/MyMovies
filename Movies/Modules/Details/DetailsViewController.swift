@@ -71,15 +71,19 @@ final class DetailsViewController: BaseViewController {
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        4
+        5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
-        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos)
+        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos, videos: viewModel.videosKeys)
         cell.selectionStyle = .none
         cell.tag = indexPath.row
         cell.delegate = self
+        if let cell = cell as? MediaCell {
+            cell.isPhotos = indexPath.row == 3
+            return cell
+        }
         return cell
     }
     

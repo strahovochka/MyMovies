@@ -17,6 +17,7 @@ class DetailsView: UIView {
         tableView.register(DetailsCellType.synopsis.cell)
         tableView.register(DetailsCellType.castAndCrew.cell)
         tableView.register(DetailsCellType.photos.cell)
+        tableView.register(DetailsCellType.videos.cell)
         tableView.backgroundColor = .clear
         return tableView
     }()

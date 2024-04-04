@@ -28,7 +28,9 @@ enum DetailsCellType {
         case .castAndCrew:
             return CastTableViewCell.self
         case .photos:
-            return PhotosCell.self
+            return MediaCell.self
+        case .videos:
+            return MediaCell.self
         default:
             return DetailsCell.self
         }
@@ -38,12 +40,10 @@ enum DetailsCellType {
         switch self {
         case .main:
             return 520
-        case .synopsis:
+        case .synopsis, .photos, .videos:
             return 142
         case .castAndCrew:
             return 338
-        case .photos:
-            return 142
         default:
             return 100
         }
@@ -74,7 +74,7 @@ class DetailsCell: BaseTableViewCell {
         super.layoutSubviews()
     }
     
-    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
+    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
         
     }
     

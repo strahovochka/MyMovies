@@ -71,7 +71,7 @@ class SynopsisCell: DetailsCell {
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
         content.text = model.overview
     }
     
