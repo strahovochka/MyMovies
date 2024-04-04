@@ -107,13 +107,32 @@ class NetworkManager: NetworkProtocol {
         }.resume()
     }
     
-    func fetchImage(with api: MoviesAPI, completition: @escaping (Response<UIImage?>) -> Void) {
-        guard let url = URL(string: "\(api.pass)") else { return }
+    func fetchPhotosData(with api: MoviesAPI, completition: @escaping (Response<[String]>) -> Void) {
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { completition(.error("Unable to form url "))
+            return
+        }
         let request = URLRequest(url: url)
+        var res: [String] = []
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
-                completition(.success(UIImage(data: data)))
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
+                    if let backdrops = json?["backdrops"] as? [[String : Any]] {
+                        for drop in backdrops {
+                            if let filePath = drop["file_path"] as? String {
+                                res.append(filePath)
+                            } else {
+                                completition(.error("Error parsing JSON"))
+                            }
+                        }
+                        completition(.success(res))
+                    } else {
+                        completition(.error("Error parsing JSON"))
+                    }
+                } catch {
+                    completition(.error(error.localizedDescription))
+                }
             } else {
                 completition(.error("No data acquired"))
             }

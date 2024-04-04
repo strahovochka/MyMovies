@@ -71,20 +71,15 @@ final class DetailsViewController: BaseViewController {
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
-        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast]())
+        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos)
         cell.selectionStyle = .none
         cell.tag = indexPath.row
-        if let cell = cell as? SynopsisTableViewCell {
-            cell.delegate = self
-        }
-        if let cell = cell as? CastTableViewCell {
-            cell.delegate = self
-        }
+        cell.delegate = self
         return cell
     }
     
@@ -96,7 +91,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension DetailsViewController: SynopsisDelegate, BaseViewModelDelegate, CastDelegate {
+extension DetailsViewController: BaseViewModelDelegate, DetailsDelegate {
     func reloadData() {
         self.mainView.tableView.reloadData()
     }
@@ -111,7 +106,7 @@ extension DetailsViewController: SynopsisDelegate, BaseViewModelDelegate, CastDe
         
     }
     
-    func viewAll() {
+    func viewAll(ofType type: ViewAllOptions) {
         //TODO: show full cast and crew list
     }
 }

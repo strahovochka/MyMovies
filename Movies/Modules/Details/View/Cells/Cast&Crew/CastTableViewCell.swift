@@ -8,10 +8,6 @@
 import UIKit
 import SnapKit
 
-protocol CastDelegate {
-    func viewAll()
-}
-
 class CastTableViewCell: DetailsCell {
     lazy var title: UILabel = {
         var label = UILabel()
@@ -26,6 +22,7 @@ class CastTableViewCell: DetailsCell {
         button.setTitle("View all", for: .normal)
         button.setTitleColor(.accentColor(), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(viewAllButtonTouched), for: .touchUpInside)
         return button
     }()
     
@@ -38,9 +35,6 @@ class CastTableViewCell: DetailsCell {
         return stack
     }()
     
-    
-    var delegate: CastDelegate?
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         stack.removeAllArrangedSubviews()
@@ -49,7 +43,7 @@ class CastTableViewCell: DetailsCell {
     override func configureView() {
         super.configureView()
         addSubview(title)
-        addSubview(viewAllButton)
+        contentView.addSubview(viewAllButton)
     }
     
     override func makeContraints() {
@@ -63,7 +57,7 @@ class CastTableViewCell: DetailsCell {
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = []) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
         for i in 0..<4 {
             if !cast.isEmpty {
                 let member = cast[i]
@@ -83,6 +77,6 @@ class CastTableViewCell: DetailsCell {
 
 private extension CastTableViewCell {
     @objc func viewAllButtonTouched() {
-        delegate?.viewAll()
+        delegate?.viewAll(ofType: .cast)
     }
 }

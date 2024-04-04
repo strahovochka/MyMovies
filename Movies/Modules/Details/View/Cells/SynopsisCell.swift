@@ -8,11 +8,7 @@
 import UIKit
 import SnapKit
 
-protocol SynopsisDelegate {
-    func showMoreToggled(start: Bool)
-}
-
-class SynopsisTableViewCell: DetailsCell {
+class SynopsisCell: DetailsCell {
     
     lazy var stack: UIStackView = {
         var stack = UIStackView()
@@ -48,8 +44,6 @@ class SynopsisTableViewCell: DetailsCell {
         button.isHidden = true
         return button
     }()
-
-    var delegate: SynopsisDelegate?
     
     override func configureView() {
         super.configureView()
@@ -77,7 +71,7 @@ class SynopsisTableViewCell: DetailsCell {
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = []) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
         content.text = model.overview
     }
     

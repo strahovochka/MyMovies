@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class PosterTableViewCell: DetailsCell {
+class PosterCell: DetailsCell {
 
     lazy var posterImage: UIImageView = {
         var imageView = UIImageView()
@@ -80,14 +80,6 @@ class PosterTableViewCell: DetailsCell {
         starStack.removeAllArrangedSubviews()
     }
     
-//    override func layoutSubviews() {
-//        subviews.forEach { view in
-//            print(view)
-//            print("______________")
-//        }
-//        print("************")
-//    }
-    
     override func configureView() {
         super.configureView()
         addSubview(posterImage)
@@ -128,7 +120,7 @@ class PosterTableViewCell: DetailsCell {
         
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = []) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = []) {
         title.text = model.title
         rating.text = "\(round(model.voteAverage / 2 * 10) / 10)/5"
         self.genres.text = genres.joined(separator: ", ")
