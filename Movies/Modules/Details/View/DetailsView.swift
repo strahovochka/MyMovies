@@ -15,6 +15,7 @@ class DetailsView: UIView {
         tableView.separatorColor = .clear
         tableView.register(DetailsCellType.main.cell)
         tableView.register(DetailsCellType.synopsis.cell)
+        tableView.register(DetailsCellType.castAndCrew.cell)
         tableView.backgroundColor = .clear
         return tableView
     }()

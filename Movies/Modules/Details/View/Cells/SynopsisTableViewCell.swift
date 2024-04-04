@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 protocol SynopsisDelegate {
-    func reloadData()
+    func showMoreToggled(start: Bool)
 }
 
 class SynopsisTableViewCell: DetailsCell {
@@ -45,17 +45,23 @@ class SynopsisTableViewCell: DetailsCell {
         button.titleLabel?.textColor = .accentColor()
         button.addTarget(self, action: #selector(showButtonTouched), for: .touchUpInside)
         button.tintColor = .green
+        button.isHidden = true
         return button
     }()
-    
-    var isShowingMore = false
+
     var delegate: SynopsisDelegate?
     
     override func configureView() {
         super.configureView()
         stack.addArrangedSubview(title)
         stack.addArrangedSubview(content)
+        stack.addArrangedSubview(showMoreButton)
         contentView.addSubview(stack)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        showMoreButton.isHidden = content.maxNumberOfLines <= 4
     }
     
     override func makeContraints() {
@@ -69,22 +75,21 @@ class SynopsisTableViewCell: DetailsCell {
         showMoreButton.snp.remakeConstraints { make in
             make.height.equalTo(30)
         }
-        stack.addArrangedSubview(showMoreButton)
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage()) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = []) {
         content.text = model.overview
     }
     
     @objc func showButtonTouched() {
-        if content.numberOfLines > 0 {
-            content.numberOfLines = 0
-            showMoreButton.setTitle("Show less", for: .normal)
+        self.delegate?.showMoreToggled(start: true)
+        if self.content.numberOfLines > 0 {
+            self.content.numberOfLines = 0
+            self.showMoreButton.setTitle("Show less", for: .normal)
         } else {
-            content.numberOfLines = 4
-            showMoreButton.setTitle("Show more", for: .normal)
+            self.content.numberOfLines = 4
+            self.showMoreButton.setTitle("Show more", for: .normal)
         }
-        isShowingMore.toggle()
-        delegate?.reloadData()
+        self.delegate?.showMoreToggled(start: false)
     }
 }

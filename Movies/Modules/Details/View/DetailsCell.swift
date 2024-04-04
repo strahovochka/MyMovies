@@ -25,6 +25,8 @@ enum DetailsCellType {
             return PosterTableViewCell.self
         case .synopsis:
             return SynopsisTableViewCell.self
+        case .castAndCrew:
+            return CastTableViewCell.self
         default:
             return DetailsCell.self
         }
@@ -33,9 +35,11 @@ enum DetailsCellType {
     var heightForRow: CGFloat {
         switch self {
         case .main:
-            return 517
+            return 520
         case .synopsis:
             return 142
+        case .castAndCrew:
+            return 338
         default:
             return 100
         }
@@ -52,7 +56,11 @@ class DetailsCell: BaseTableViewCell {
         super.layoutSubviews()
     }
     
-    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage()) {
+    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = []) {
         
+    }
+    
+    func getHeight() -> CGFloat {
+        return 0
     }
 }

@@ -37,7 +37,7 @@ final class HomeViewModel: BaseViewModel {
     
     func getContent() async {
         await withCheckedContinuation { continuation in
-            networkManager.fetchComingNow { [weak self] response in
+            NetworkManager.shared.fetchComingNow { [weak self] response in
                 guard let self = self else { return }
                 switch response {
                 case let .success(movies):
@@ -48,7 +48,7 @@ final class HomeViewModel: BaseViewModel {
                 
                 }
             }
-            networkManager.fetchComingSoon { [weak self] response in
+            NetworkManager.shared.fetchComingSoon { [weak self] response in
                 guard let self = self else { return }
                 switch response {
                 case let .success(movies):
@@ -117,7 +117,6 @@ final class HomeViewModel: BaseViewModel {
     
     func getGenreName(for genreIds: [Int]) -> String? {
         var res: [String] = []
-        print(genres)
         genreIds.forEach {
             if let name = genres[$0] {
                 res.append(name)

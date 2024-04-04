@@ -26,6 +26,8 @@
 		043F84872BB5B9FA007E72BF /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043F84862BB5B9F9007E72BF /* UITableView+Extensions.swift */; };
 		046570112BBC373700716E8E /* SynopsisTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046570102BBC373700716E8E /* SynopsisTableViewCell.swift */; };
 		046570142BBC552F00716E8E /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046570132BBC552F00716E8E /* UILabel+Extensions.swift */; };
+		046570162BBC5FA400716E8E /* CastTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046570152BBC5FA400716E8E /* CastTableViewCell.swift */; };
+		046570182BBC614400716E8E /* Cast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046570172BBC614400716E8E /* Cast.swift */; };
 		047162712BA9E01E008D883E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047162702BA9E01E008D883E /* AppDelegate.swift */; };
 		047162732BA9E01E008D883E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047162722BA9E01E008D883E /* SceneDelegate.swift */; };
 		047162752BA9E01E008D883E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047162742BA9E01E008D883E /* ViewController.swift */; };
@@ -44,6 +46,7 @@
 		0471629F2BAC8334008D883E /* TabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0471629E2BAC8334008D883E /* TabCoordinator.swift */; };
 		047162A22BAC851A008D883E /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047162A12BAC8519008D883E /* HomeViewController.swift */; };
 		047162A42BAC8525008D883E /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047162A32BAC8525008D883E /* HomeViewModel.swift */; };
+		04ACD64D2BBEA0E7007D21F2 /* CastMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04ACD64C2BBEA0E7007D21F2 /* CastMemberView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +69,8 @@
 		043F84862BB5B9F9007E72BF /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
 		046570102BBC373700716E8E /* SynopsisTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopsisTableViewCell.swift; sourceTree = "<group>"; };
 		046570132BBC552F00716E8E /* UILabel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
+		046570152BBC5FA400716E8E /* CastTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastTableViewCell.swift; sourceTree = "<group>"; };
+		046570172BBC614400716E8E /* Cast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cast.swift; sourceTree = "<group>"; };
 		0471626D2BA9E01E008D883E /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		047162702BA9E01E008D883E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		047162722BA9E01E008D883E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +90,7 @@
 		0471629E2BAC8334008D883E /* TabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabCoordinator.swift; sourceTree = "<group>"; };
 		047162A12BAC8519008D883E /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		047162A32BAC8525008D883E /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		04ACD64C2BBEA0E7007D21F2 /* CastMemberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastMemberView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +152,7 @@
 		043F847A2BB58DD2007E72BF /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				046570192BBC6A8A00716E8E /* Cast&Crew */,
 				043F847E2BB59140007E72BF /* PosterTableViewCell.swift */,
 				046570102BBC373700716E8E /* SynopsisTableViewCell.swift */,
 			);
@@ -160,6 +167,15 @@
 				043F847C2BB58E03007E72BF /* DetailsView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		046570192BBC6A8A00716E8E /* Cast&Crew */ = {
+			isa = PBXGroup;
+			children = (
+				046570152BBC5FA400716E8E /* CastTableViewCell.swift */,
+				04ACD64C2BBEA0E7007D21F2 /* CastMemberView.swift */,
+			);
+			path = "Cast&Crew";
 			sourceTree = "<group>";
 		};
 		047162642BA9E01E008D883E = {
@@ -210,6 +226,7 @@
 			children = (
 				0471628C2BA9E67A008D883E /* Movies.swift */,
 				0471628E2BA9E6F2008D883E /* Response.swift */,
+				046570172BBC614400716E8E /* Cast.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -341,7 +358,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0471629C2BA9EEA2008D883E /* AppCoordinator.swift in Sources */,
+				04ACD64D2BBEA0E7007D21F2 /* CastMemberView.swift in Sources */,
 				047162962BA9E80D008D883E /* NetworkManager.swift in Sources */,
+				046570182BBC614400716E8E /* Cast.swift in Sources */,
 				047162922BA9E742008D883E /* MoviesAPI.swift in Sources */,
 				043F84742BB47305007E72BF /* BaseViewController.swift in Sources */,
 				043F84812BB591DC007E72BF /* BaseTableViewCell.swift in Sources */,
@@ -360,6 +379,7 @@
 				043F84652BB1DC06007E72BF /* UIColor+Extensions.swift in Sources */,
 				043F84682BB1DCFF007E72BF /* CustomSegmentControl.swift in Sources */,
 				047162A42BAC8525008D883E /* HomeViewModel.swift in Sources */,
+				046570162BBC5FA400716E8E /* CastTableViewCell.swift in Sources */,
 				043F846A2BB2F9B7007E72BF /* MovieCell.swift in Sources */,
 				046570112BBC373700716E8E /* SynopsisTableViewCell.swift in Sources */,
 				046570142BBC552F00716E8E /* UILabel+Extensions.swift in Sources */,
