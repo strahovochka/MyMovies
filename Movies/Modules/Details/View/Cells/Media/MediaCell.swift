@@ -16,7 +16,7 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
         var label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.textColor = .white
-        label.text = "Photos"
+        //label.text = "Photos"
         return label
     }()
     
@@ -44,7 +44,11 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
     private var photos: [UIImage] = []
     private var videosKeys: [UIImage] = []
     
-    var isPhotos: Bool = true
+    var isPhotos: Bool = true {
+        didSet {
+            self.title.text = isPhotos ? "Photos" : "Videos"
+        }
+    }
     
     override func configureView() {
         super.configureView()
@@ -84,6 +88,7 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.cellIdn(), for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell () }
+        cell.configureView(asPhoto: isPhotos)
         if isPhotos {
             cell.imageView.image = photos[indexPath.row]
             cell.isUserInteractionEnabled = false

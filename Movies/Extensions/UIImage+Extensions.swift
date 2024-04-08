@@ -31,4 +31,8 @@ extension UIImage {
     class func shareIcon() -> UIImage? {
         UIImage(named: "share")
     }
+    
+    class func playButtonIcon() -> UIImage? {
+        UIImage(named: "playButton")
+    }
 }
