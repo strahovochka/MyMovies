@@ -127,9 +127,4 @@ class PosterCell: DetailsCell {
         starStack.makeStarRating(of: model.voteAverage)
         posterImage.image = image
     }
-    
-    override func getHeight() -> CGFloat {
-        var height: CGFloat = segmentControl.frame.origin.y + segmentControl.frame.height - 24
-        return height
-    }
 }

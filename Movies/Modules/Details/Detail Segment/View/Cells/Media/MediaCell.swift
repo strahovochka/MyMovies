@@ -16,7 +16,6 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
         var label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .medium)
         label.textColor = .white
-        //label.text = "Photos"
         return label
     }()
     
@@ -25,6 +24,7 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
         button.setTitle("View all", for: .normal)
         button.setTitleColor(.accentColor(), for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+        button.addTarget(self, action: #selector(viewAllButtonTouched), for: .touchUpInside)
         return button
     }()
     
@@ -53,7 +53,7 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
     override func configureView() {
         super.configureView()
         addSubview(title)
-        addSubview(viewAllButton)
+        contentView.addSubview(viewAllButton)
         contentView.addSubview(collectionView)
     }
     
@@ -113,4 +113,10 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
         //TODO: make transition to all photos screen
     }
     
+}
+
+private extension MediaCell {
+    @objc func viewAllButtonTouched() {
+        delegate?.viewAll(ofType: isPhotos ? .photos : .videos)
+    }
 }

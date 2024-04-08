@@ -38,7 +38,7 @@ class SynopsisCell: DetailsCell {
         var button = UIButton()
         button.setTitle("Show more", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        button.titleLabel?.textColor = .accentColor()
+        button.setTitleColor(.accentColor(), for: .normal)
         button.addTarget(self, action: #selector(showButtonTouched), for: .touchUpInside)
         button.tintColor = .green
         button.isHidden = true

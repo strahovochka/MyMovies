@@ -14,7 +14,7 @@ final class DetailsViewModel {
     private(set) var image: UIImage
     private(set) var cast: [Cast]?
     private(set) var photos: [UIImage]?
-    private(set) var videosKeys: [UIImage]?
+    private(set) var videos: (keys: [String], previews: [UIImage])?
     
     weak var delegate: BaseViewModelDelegate?
     
@@ -60,7 +60,9 @@ final class DetailsViewModel {
             case .success(let keys):
                 let urls = keys.map { URL(string: "https://img.youtube.com/vi/\($0)/0.jpg") }
                 self.loadImages(urls: urls) { images in
-                    self.videosKeys = images
+                    if let images = images {
+                        self.videos = (keys, images)
+                    }
                 }
             case .error(let descr):
                 print(descr)

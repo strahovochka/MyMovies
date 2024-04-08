@@ -50,12 +50,6 @@ enum DetailsCellType {
     }
 }
 
-enum ViewAllOptions {
-    case cast
-    case photos
-    case videos
-}
-
 protocol DetailsDelegate {
     func showMoreToggled(start: Bool)
     func viewAll(ofType type: ViewAllOptions)
@@ -76,9 +70,5 @@ class DetailsCell: BaseTableViewCell {
     
     func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
         
-    }
-    
-    func getHeight() -> CGFloat {
-        return 0
     }
 }
