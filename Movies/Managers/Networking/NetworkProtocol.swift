@@ -11,4 +11,5 @@ protocol NetworkProtocol {
     func fetchComingNow(completition: @escaping (Response<[Movies]>) -> Void)
     func fetchComingSoon(completition: @escaping (Response<[Movies]>) -> Void)
     func fetchGenres(completition: @escaping (Response<[Int: String]>) -> Void)
+    func fetchCreditsForMovieWith(id movieId: Int, completition: @escaping (Response<[Cast]>) -> Void)
 }

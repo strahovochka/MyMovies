@@ -120,4 +120,17 @@ extension TabCoordinator: BaseViewControllerDelegate {
             currentVC.show(vc, sender: nil)
         }
     }
+    
+    func showViewAll(cast: [Cast], photos: [UIImage], videos: [String], type: ViewAllOptions, scrollTo indexPath: IndexPath?) {
+        let vc = ViewMoreViewController(cast: cast, photos: photos, videos: videos, controllerType: type)
+        vc.flowDelegate = self
+        vc.hidesBottomBarWhenPushed = true
+        if let currentVC = self.tabBarController.viewControllers?[self.tabBarController.selectedIndex] {
+            currentVC.show(vc, sender: nil)
+            if let indexPath = indexPath {
+                let newPath = IndexPath(row: indexPath.section, section: indexPath.row)
+                vc.mainView.tableView.scrollToRow(at: newPath, at: .middle, animated: true)
+            }
+        }
+    }
 }

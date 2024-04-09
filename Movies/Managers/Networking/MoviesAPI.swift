@@ -12,6 +12,9 @@ enum MoviesAPI {
     case comingSoon
     case poster(String)
     case genres
+    case cast(Int)
+    case photos(Int)
+    case videos(Int)
     
     var pass: String {
         switch self {
@@ -23,6 +26,12 @@ enum MoviesAPI {
             return "https://image.tmdb.org/t/p/w500//\(path)"
         case .genres:
             return "/genre/movie/list"
+        case .cast(let id):
+            return "/movie/\(id)/credits"
+        case .photos(let id):
+            return "/movie/\(id)/images"
+        case .videos(let id):
+            return "/movie/\(id)/videos"
         }
     }
     

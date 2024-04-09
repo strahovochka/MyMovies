@@ -30,7 +30,6 @@ final class DetailsViewController: BaseViewController {
         var view = DetailsView()
         view.tableView.delegate = self
         view.tableView.dataSource = self
-        //view.tableView.estimatedRowHeight = UITableView.automaticDimension
         return view
     }()
     
@@ -40,6 +39,8 @@ final class DetailsViewController: BaseViewController {
     init(object: Movies, genres: [String], image: UIImage) {
         self.viewModel = DetailsViewModel(movie: object, genres: genres, image: image)
         super.init(controllerType: .home)
+        self.viewModel.delegate = self
+        self.viewModel.getContent()
     }
     
     required init?(coder: NSCoder) {
@@ -70,16 +71,18 @@ final class DetailsViewController: BaseViewController {
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
+        5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
-        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image)
+        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos, videos: viewModel.videos)
         cell.selectionStyle = .none
         cell.tag = indexPath.row
-        if let cell = cell as? SynopsisTableViewCell {
-            cell.delegate = self
+        cell.delegate = self
+        if let cell = cell as? MediaCell {
+            cell.isPhotos = indexPath.row == 3
+            return cell
         }
         return cell
     }
@@ -92,9 +95,29 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension DetailsViewController: SynopsisDelegate {
+extension DetailsViewController: BaseViewModelDelegate, DetailsDelegate {
     func reloadData() {
         self.mainView.tableView.reloadData()
+    }
+    
+    func showMoreToggled(start: Bool) {
+        switch start {
+        case true:
+            self.mainView.tableView.beginUpdates()
+        case false:
+            self.mainView.tableView.endUpdates()
+        }
+        
+    }
+    
+    func viewAll(ofType type: ViewAllOptions, scrollTo indexPath: IndexPath?) {
+        viewModel.getVideosKeys { keys in
+            if let cast = self.viewModel.cast, let photos = self.viewModel.photos {
+                DispatchQueue.main.async {
+                    self.flowDelegate?.showViewAll(cast: cast, photos: photos, videos: keys, type: type, scrollTo: indexPath)
+                }
+            }
+        }
     }
 }
 
@@ -104,3 +127,4 @@ private extension DetailsViewController {
         
     }
 }
+

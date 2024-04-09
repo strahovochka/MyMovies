@@ -5,7 +5,7 @@
 //  Created by Jane Strashok on 19.03.2024.
 //
 
-import Foundation
+import UIKit
 
 class NetworkManager: NetworkProtocol {
     
@@ -18,6 +18,33 @@ class NetworkManager: NetworkProtocol {
     
     func fetchComingSoon(completition: @escaping (Response<[Movies]>) -> Void) {
         fetchMovies(.comingSoon, completition: completition)
+    }
+    
+    func fetchCreditsForMovieWith(id movieId: Int, completition: @escaping (Response<[Cast]>) -> Void) {
+        let api: MoviesAPI = .cast(movieId)
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { return }
+        var res: [Cast] = []
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                    if let castData = json?["cast"] as? [[String: Any]] {
+                        for cast in castData {
+                            if let name = cast["name"] as? String,
+                               let profilePath = cast["profile_path"] as? String,
+                               let charachter = cast["character"] as? String {
+                                res.append(Cast(name: name, profilePath: profilePath, character: charachter))
+                            }
+                        }
+                        completition(.success(res))
+                    }
+                } catch {
+                    completition(.error(error.localizedDescription))
+                }
+            }
+        }.resume()
+                
     }
     
     func fetchGenres(completition: @escaping (Response<[Int: String]>) -> Void) {
@@ -76,6 +103,62 @@ class NetworkManager: NetworkProtocol {
             } else {
                 completition(.error("No data acquired"))
                 return
+            }
+        }.resume()
+    }
+    
+    func fetchPhotosData(with api: MoviesAPI, completition: @escaping (Response<[String]>) -> Void) {
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { completition(.error("Unable to form url"))
+            return
+        }
+        let request = URLRequest(url: url)
+        var res: [String] = []
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
+                    if let backdrops = json?["backdrops"] as? [[String : Any]] {
+                        for drop in backdrops {
+                            if let filePath = drop["file_path"] as? String {
+                                res.append(filePath)
+                            } else {
+                                completition(.error("Error parsing JSON"))
+                            }
+                        }
+                        completition(.success(res))
+                    } else {
+                        completition(.error("Error parsing JSON"))
+                    }
+                } catch {
+                    completition(.error(error.localizedDescription))
+                }
+            } else {
+                completition(.error("No data acquired"))
+            }
+        }.resume()
+    }
+    
+    func fetchVideoData(with api: MoviesAPI, completition: @escaping (Response<[String]>) -> Void) {
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { return }
+        let request = URLRequest(url: url)
+        var res = [String]()
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
+                    if let videosData = json?["results"] as? [[String : Any]] {
+                        for videoData in videosData {
+                            if let key = videoData["key"] as? String {
+                                res.append(key)
+                            }
+                        }
+                        completition(.success(res))
+                    }
+                } catch {
+                    completition(.error(error.localizedDescription))
+                }
             }
         }.resume()
     }

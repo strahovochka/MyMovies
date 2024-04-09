@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class PosterTableViewCell: DetailsCell {
+class PosterCell: DetailsCell {
 
     lazy var posterImage: UIImageView = {
         var imageView = UIImageView()
@@ -21,6 +21,7 @@ class PosterTableViewCell: DetailsCell {
         label.font = .systemFont(ofSize: 24, weight: .semibold)
         label.textColor = .white
         label.textAlignment = .center
+        label.numberOfLines = 2
         return label
     }()
     
@@ -29,7 +30,7 @@ class PosterTableViewCell: DetailsCell {
         label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textColor = .unselectedText()
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
     
@@ -119,7 +120,7 @@ class PosterTableViewCell: DetailsCell {
         
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage()) {
+    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
         title.text = model.title
         rating.text = "\(round(model.voteAverage / 2 * 10) / 10)/5"
         self.genres.text = genres.joined(separator: ", ")

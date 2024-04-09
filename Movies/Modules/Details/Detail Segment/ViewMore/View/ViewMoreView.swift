@@ -1,28 +1,28 @@
 //
-//  DetailsView.swift
+//  ViewMoreView.swift
 //  Movies
 //
-//  Created by Jane Strashok on 28.03.2024.
+//  Created by Jane Strashok on 08.04.2024.
 //
 
 import UIKit
 import SnapKit
 
-class DetailsView: UIView {
+class ViewMoreView: UIView {
     
     lazy var tableView: UITableView = {
-        var tableView = UITableView()
-        tableView.separatorColor = .clear
-        tableView.register(DetailsCellType.main.cell)
-        tableView.register(DetailsCellType.synopsis.cell)
-        tableView.backgroundColor = .clear
-        return tableView
+        var view = UITableView()
+        view.backgroundColor = .clear
+        ViewAllOptions.allCases.forEach { view.register($0.cell) }
+        view.sectionHeaderTopPadding = 0
+        view.showsVerticalScrollIndicator = false
+        return view
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureView()
-        makeConstraints()
+        makeContraints()
     }
     
     required init?(coder: NSCoder) {
@@ -33,10 +33,11 @@ class DetailsView: UIView {
         addSubview(tableView)
     }
     
-    func makeConstraints() {
+    func makeContraints() {
         tableView.snp.remakeConstraints { make in
             make.top.bottom.equalTo(safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview().inset(18)
         }
     }
+    
 }

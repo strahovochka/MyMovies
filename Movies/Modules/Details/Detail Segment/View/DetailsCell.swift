@@ -22,9 +22,15 @@ enum DetailsCellType {
     var cell: DetailsCell.Type {
         switch self {
         case .main:
-            return PosterTableViewCell.self
+            return PosterCell.self
         case .synopsis:
-            return SynopsisTableViewCell.self
+            return SynopsisCell.self
+        case .castAndCrew:
+            return CastTableViewCell.self
+        case .photos:
+            return MediaCell.self
+        case .videos:
+            return MediaCell.self
         default:
             return DetailsCell.self
         }
@@ -33,16 +39,26 @@ enum DetailsCellType {
     var heightForRow: CGFloat {
         switch self {
         case .main:
-            return 517
-        case .synopsis:
+            return 520
+        case .synopsis, .photos, .videos:
             return 142
+        case .castAndCrew:
+            return 338
         default:
             return 100
         }
     }
 }
 
+protocol DetailsDelegate {
+    func showMoreToggled(start: Bool)
+    func viewAll(ofType type: ViewAllOptions, scrollTo indexPath: IndexPath?)
+}
+
 class DetailsCell: BaseTableViewCell {
+    
+    var delegate: DetailsDelegate?
+    
     override func configureView() {
         backgroundColor = .clear
     }
@@ -52,7 +68,7 @@ class DetailsCell: BaseTableViewCell {
         super.layoutSubviews()
     }
     
-    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage()) {
+    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
         
     }
 }
