@@ -13,6 +13,9 @@ final class ViewMoreViewController: BaseViewController {
         var view = ViewMoreView()
         view.tableView.delegate = self
         view.tableView.dataSource = self
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+        longPressRecognizer.minimumPressDuration = 0.5
+        view.tableView.addGestureRecognizer(longPressRecognizer)
         return view
     }()
     
@@ -83,5 +86,35 @@ extension ViewMoreViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         controllerType.headerHeight
+    }
+}
+
+private extension ViewMoreViewController {
+    @objc func longPressed(sender: UILongPressGestureRecognizer) {
+        if sender.state != .ended {
+            return
+        }
+        
+        let point = sender.location(in: self.mainView.tableView)
+        let indexPath = self.mainView.tableView.indexPathForRow(at: point)
+        
+        if let indexPath = indexPath, let cell = self.mainView.tableView.cellForRow(at: indexPath) as? PhotoCell {
+            let alert = UIAlertController(title: "Save image", message: "Are you sure you want to save this image?", preferredStyle: .alert)
+            let noAction = UIAlertAction(title: "No", style: .cancel)
+            let yestAction = UIAlertAction(title: "Yes", style: .default) { _ in
+                UIImageWriteToSavedPhotosAlbum(cell.photoImageView.image!, self, #selector(self.image), nil)
+            }
+            alert.addAction(noAction)
+            alert.addAction(yestAction)
+            self.present(alert, animated: true)
+        }
+    }
+    
+    @objc func image(image: UIImage!, didFinishSavingWithError error: NSError!, contextInfo: AnyObject!) {
+        if let error = error {
+            print(error.localizedDescription)
+        } else {
+            print("Image was successfully loaded")
+        }
     }
 }

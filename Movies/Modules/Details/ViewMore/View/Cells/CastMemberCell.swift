@@ -76,7 +76,7 @@ class CastMemberCell: ViewMoreCell {
         if let castMember = castMember {
             profilePhoto.image = castMember.profileImage
             nameTitle.text = castMember.name
-            characterTitle.text = castMember.character
+            characterTitle.text = castMember.character.replacingOccurrences(of: " (voice)", with: "")
         }
     }
 }
