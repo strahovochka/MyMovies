@@ -72,7 +72,7 @@ class CastMemberCell: ViewMoreCell {
         }
     }
     
-    override func configure(castMember: Cast? = nil, photo: UIImage = UIImage(), videoPreview: (String, UIImage) = ("", UIImage())) {
+    override func configure(castMember: Cast? = nil, photo: UIImage = UIImage(), videoKey: String = "") {
         if let castMember = castMember {
             profilePhoto.image = castMember.profileImage
             nameTitle.text = castMember.name

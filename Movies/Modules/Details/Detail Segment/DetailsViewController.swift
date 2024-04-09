@@ -76,7 +76,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
-        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos, videos: viewModel.videos?.previews)
+        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos, videos: viewModel.videos)
         cell.selectionStyle = .none
         cell.tag = indexPath.row
         cell.delegate = self
@@ -110,9 +110,13 @@ extension DetailsViewController: BaseViewModelDelegate, DetailsDelegate {
         
     }
     
-    func viewAll(ofType type: ViewAllOptions) {
-        if let videos = viewModel.videos, let cast = viewModel.cast, let photos = viewModel.photos {
-            flowDelegate?.showViewAll(cast: cast, photos: photos, videos: videos, type: type)
+    func viewAll(ofType type: ViewAllOptions, scrollTo indexPath: IndexPath?) {
+        viewModel.getVideosKeys { keys in
+            if let cast = self.viewModel.cast, let photos = self.viewModel.photos {
+                DispatchQueue.main.async {
+                    self.flowDelegate?.showViewAll(cast: cast, photos: photos, videos: keys, type: type, scrollTo: indexPath)
+                }
+            }
         }
     }
 }

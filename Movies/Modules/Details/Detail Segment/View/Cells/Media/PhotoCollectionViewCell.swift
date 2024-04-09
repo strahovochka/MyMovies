@@ -50,9 +50,3 @@ class PhotoCollectionViewCell: BaseCollectionViewCell {
         }
     }
 }
-
-private extension PhotoCollectionViewCell {
-    @objc func showVideo() {
-        //TODO: make transition to show video
-    }
-}

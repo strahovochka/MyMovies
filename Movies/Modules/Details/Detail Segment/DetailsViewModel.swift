@@ -14,7 +14,7 @@ final class DetailsViewModel {
     private(set) var image: UIImage
     private(set) var cast: [Cast]?
     private(set) var photos: [UIImage]?
-    private(set) var videos: (keys: [String], previews: [UIImage])?
+    private(set) var videos: [UIImage]?
     
     weak var delegate: BaseViewModelDelegate?
     
@@ -61,9 +61,20 @@ final class DetailsViewModel {
                 let urls = keys.map { URL(string: "https://img.youtube.com/vi/\($0)/0.jpg") }
                 self.loadImages(urls: urls) { images in
                     if let images = images {
-                        self.videos = (keys, images)
+                        self.videos = images
                     }
                 }
+            case .error(let descr):
+                print(descr)
+            }
+        }
+    }
+    
+    func getVideosKeys(completition: @escaping ([String]) -> Void) {
+        NetworkManager.shared.fetchVideoData(with: .videos(self.movie.id)) { response in
+            switch response {
+            case .success(let keys):
+                completition(keys)
             case .error(let descr):
                 print(descr)
             }

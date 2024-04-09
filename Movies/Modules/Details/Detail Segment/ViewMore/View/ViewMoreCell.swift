@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum ViewAllOptions {
+enum ViewAllOptions: CaseIterable {
     case cast
     case photos
     case videos
@@ -30,7 +30,7 @@ enum ViewAllOptions {
         case .photos:
             return PhotoCell.self
         case .videos:
-            return ViewMoreCell.self
+            return VideoCell.self
         }
     }
     
@@ -64,7 +64,7 @@ class ViewMoreCell: BaseTableViewCell {
         super.layoutSubviews()
     }
     
-    func configure(castMember: Cast? = nil, photo: UIImage = UIImage(), videoPreview: (String, UIImage) = ("", UIImage())) {
+    func configure(castMember: Cast? = nil, photo: UIImage = UIImage(), videoKey: String = "") {
         
     }
 }

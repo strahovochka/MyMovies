@@ -91,11 +91,9 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
         cell.configureView(asPhoto: isPhotos)
         if isPhotos {
             cell.imageView.image = photos[indexPath.row]
-            cell.isUserInteractionEnabled = false
             return cell
         } else {
             cell.imageView.image = videosKeys[indexPath.row]
-            cell.isUserInteractionEnabled = false
             return cell
         }
     }
@@ -110,13 +108,13 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        //TODO: make transition to all photos screen
+        delegate?.viewAll(ofType: isPhotos ? .photos : .videos, scrollTo: indexPath)
     }
     
 }
 
 private extension MediaCell {
     @objc func viewAllButtonTouched() {
-        delegate?.viewAll(ofType: isPhotos ? .photos : .videos)
+        delegate?.viewAll(ofType: isPhotos ? .photos : .videos, scrollTo: nil)
     }
 }

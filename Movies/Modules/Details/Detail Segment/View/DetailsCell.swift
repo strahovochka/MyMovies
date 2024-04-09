@@ -52,7 +52,7 @@ enum DetailsCellType {
 
 protocol DetailsDelegate {
     func showMoreToggled(start: Bool)
-    func viewAll(ofType type: ViewAllOptions)
+    func viewAll(ofType type: ViewAllOptions, scrollTo indexPath: IndexPath?)
 }
 
 class DetailsCell: BaseTableViewCell {

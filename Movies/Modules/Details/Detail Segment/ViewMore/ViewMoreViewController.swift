@@ -14,7 +14,7 @@ final class ViewMoreViewController: BaseViewController {
         view.tableView.delegate = self
         view.tableView.dataSource = self
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
-        longPressRecognizer.minimumPressDuration = 0.5
+        longPressRecognizer.minimumPressDuration = 1
         view.tableView.addGestureRecognizer(longPressRecognizer)
         return view
     }()
@@ -22,7 +22,7 @@ final class ViewMoreViewController: BaseViewController {
     private var controllerType: ViewAllOptions
     private var viewModel: ViewMoreModel
     
-    init(cast: [Cast], photos: [UIImage], videos: ([String], [UIImage]), controllerType: ViewAllOptions) {
+    init(cast: [Cast], photos: [UIImage], videos: [String], controllerType: ViewAllOptions) {
         self.controllerType = controllerType
         self.viewModel = ViewMoreModel(cast: cast, photos: photos, videos: videos)
         super.init(controllerType: .home)
@@ -49,7 +49,7 @@ extension ViewMoreViewController: UITableViewDelegate, UITableViewDataSource {
         case .photos:
             return viewModel.photos.count
         case .videos:
-            return viewModel.videos.previews.count
+            return viewModel.videos.count
         }
     }
     
@@ -67,9 +67,8 @@ extension ViewMoreViewController: UITableViewDelegate, UITableViewDataSource {
             let photo = viewModel.photos[indexPath.section]
             cell.configure(photo: photo)
         case .videos:
-            let preview = viewModel.videos.previews[indexPath.section]
-            let key = viewModel.videos.keys[indexPath.section]
-            cell.configure(videoPreview: (key, preview))
+            let key = viewModel.videos[indexPath.section]
+            cell.configure(videoKey: key)
         }
         return cell
     }
@@ -91,22 +90,34 @@ extension ViewMoreViewController: UITableViewDelegate, UITableViewDataSource {
 
 private extension ViewMoreViewController {
     @objc func longPressed(sender: UILongPressGestureRecognizer) {
-        if sender.state != .ended {
-            return
-        }
-        
-        let point = sender.location(in: self.mainView.tableView)
-        let indexPath = self.mainView.tableView.indexPathForRow(at: point)
-        
-        if let indexPath = indexPath, let cell = self.mainView.tableView.cellForRow(at: indexPath) as? PhotoCell {
-            let alert = UIAlertController(title: "Save image", message: "Are you sure you want to save this image?", preferredStyle: .alert)
-            let noAction = UIAlertAction(title: "No", style: .cancel)
-            let yestAction = UIAlertAction(title: "Yes", style: .default) { _ in
-                UIImageWriteToSavedPhotosAlbum(cell.photoImageView.image!, self, #selector(self.image), nil)
+        if sender.state == .began {
+            let point = sender.location(in: self.mainView.tableView)
+            let indexPath = self.mainView.tableView.indexPathForRow(at: point)
+            if let indexPath = indexPath, let cell = self.mainView.tableView.cellForRow(at: indexPath) as? PhotoCell {
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+                    cell.photoImageView.transform = CGAffineTransform(scaleX: 0.92, y: 0.94)
+                } completion: { finished in
+                    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+                        cell.photoImageView.transform = CGAffineTransform(scaleX: 0.95, y: 0.97)
+                    } completion: { finished in
+                        let alert = UIAlertController(title: "Save image", message: "Are you sure you want to save this image?", preferredStyle: .alert)
+                        let noAction = UIAlertAction(title: "No", style: .cancel) { _ in
+                            UIView.animate(withDuration: 0.3) {
+                                cell.photoImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                            }
+                        }
+                        let yestAction = UIAlertAction(title: "Yes", style: .default) { _ in
+                            UIView.animate(withDuration: 0.3) {
+                                cell.photoImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                            }
+                            UIImageWriteToSavedPhotosAlbum(cell.photoImageView.image!, self, #selector(self.image), nil)
+                        }
+                        alert.addAction(noAction)
+                        alert.addAction(yestAction)
+                        self.present(alert, animated: true)
+                    }
+                }
             }
-            alert.addAction(noAction)
-            alert.addAction(yestAction)
-            self.present(alert, animated: true)
         }
     }
     

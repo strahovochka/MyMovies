@@ -14,6 +14,7 @@ class PhotoCell: ViewMoreCell {
         view.layer.masksToBounds = true
         view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 4
+        view.isUserInteractionEnabled = true
         return view
     }()
     
@@ -24,7 +25,7 @@ class PhotoCell: ViewMoreCell {
     
     override func configureView() {
         super.configureView()
-        addSubview(photoImageView)
+        contentView.addSubview(photoImageView)
     }
     
     override func makeContraints() {
@@ -33,7 +34,13 @@ class PhotoCell: ViewMoreCell {
         }
     }
     
-    override func configure(castMember: Cast? = nil, photo: UIImage = UIImage(), videoPreview: (String, UIImage) = ("", UIImage())) {
+    override func configure(castMember: Cast? = nil, photo: UIImage = UIImage(), videoKey: String = "") {
         self.photoImageView.image = photo
+    }
+    
+    func remakeConstraints() {
+        photoImageView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview().inset(6)
+        }
     }
 }

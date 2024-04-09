@@ -11,9 +11,9 @@ final class ViewMoreModel {
     
     private(set) var cast: [Cast]
     private(set) var photos: [UIImage]
-    private(set) var videos: (keys: [String], previews: [UIImage])
+    private(set) var videos: [String]
     
-    init(cast: [Cast], photos: [UIImage], videos: (keys: [String], previews: [UIImage])) {
+    init(cast: [Cast], photos: [UIImage], videos: [String]) {
         self.cast = cast
         self.photos = photos
         self.videos = videos

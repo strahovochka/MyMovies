@@ -77,6 +77,6 @@ class CastTableViewCell: DetailsCell {
 
 private extension CastTableViewCell {
     @objc func viewAllButtonTouched() {
-        delegate?.viewAll(ofType: .cast)
+        delegate?.viewAll(ofType: .cast, scrollTo: nil)
     }
 }

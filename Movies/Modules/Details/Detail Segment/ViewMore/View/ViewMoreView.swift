@@ -13,9 +13,9 @@ class ViewMoreView: UIView {
     lazy var tableView: UITableView = {
         var view = UITableView()
         view.backgroundColor = .clear
-        view.register(CastMemberCell.self)
-        view.register(PhotoCell.self)
+        ViewAllOptions.allCases.forEach { view.register($0.cell) }
         view.sectionHeaderTopPadding = 0
+        view.showsVerticalScrollIndicator = false
         return view
     }()
     

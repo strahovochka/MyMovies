@@ -9,7 +9,7 @@ import UIKit
 
 protocol BaseViewControllerDelegate: AnyObject {
     func showDetails(object: Movies, genres: [String], image: UIImage)
-    func showViewAll(cast: [Cast], photos: [UIImage], videos: ([String], [UIImage]), type: ViewAllOptions)
+    func showViewAll(cast: [Cast], photos: [UIImage], videos: [String], type: ViewAllOptions, scrollTo indexPath: IndexPath?)
 }
 
 class BaseViewController: UIViewController {
