@@ -71,6 +71,7 @@ class PosterCell: DetailsCell {
         view.setTitleTextAttributes(unselectedTextStyle, for: .normal)
         view.setTitleTextAttributes(selectedTextStyle, for: .selected)
         view.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
+        view.addTarget(self, action: #selector(segmentValueChanged), for: .valueChanged)
         return view
     }()
     
@@ -120,11 +121,18 @@ class PosterCell: DetailsCell {
         
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
-        title.text = model.title
-        rating.text = "\(round(model.voteAverage / 2 * 10) / 10)/5"
-        self.genres.text = genres.joined(separator: ", ")
-        starStack.makeStarRating(of: model.voteAverage)
-        posterImage.image = image
+    override func configure(model: DetailsViewModel) {
+        let movie = model.movie
+        title.text = movie.title
+        rating.text = "\(round(movie.voteAverage / 2 * 10) / 10)/5"
+        self.genres.text = model.genres.joined(separator: ", ")
+        starStack.makeStarRating(of: movie.voteAverage)
+        posterImage.image = model.image
+    }
+}
+
+private extension PosterCell {
+    @objc func segmentValueChanged() {
+        self.delegate?.segmentValueChanged(sender: self.segmentControl)
     }
 }

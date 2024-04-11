@@ -72,8 +72,8 @@ class MediaCell: DetailsCell, UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
-        if let photos = photos, let videos = videos {
+    override func configure(model:DetailsViewModel) {
+        if let photos = model.photos, let videos = model.videos {
             self.photos = photos
             self.videosKeys = videos
             self.collectionView.reloadData()

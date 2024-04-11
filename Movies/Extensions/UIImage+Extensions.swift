@@ -35,4 +35,8 @@ extension UIImage {
     class func playButtonIcon() -> UIImage? {
         UIImage(named: "playButton")
     }
+    
+    class func triangleForReviews() -> UIImage? {
+        UIImage(named: "triangle")
+    }
 }

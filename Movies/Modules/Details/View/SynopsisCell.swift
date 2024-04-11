@@ -71,8 +71,8 @@ class SynopsisCell: DetailsCell {
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
-        content.text = model.overview
+    override func configure(model: DetailsViewModel) {
+        content.text = model.movie.overview
     }
     
     @objc func showButtonTouched() {

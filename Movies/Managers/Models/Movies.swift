@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Movies: Codable {
+struct Movies {
     var posterPath: String
     var genreIds: [Int]
     var id: Int

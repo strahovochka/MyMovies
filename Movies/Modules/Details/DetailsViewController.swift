@@ -15,7 +15,7 @@ enum DetailsViewType: String, CaseIterable {
     var cells: [DetailsCellType] {
         switch self {
         case .detail:
-            return [.main, .synopsis, .castAndCrew, .photos, .videos, .blogs]
+            return [.main, .synopsis, .castAndCrew, .photos, .videos]
         case .reviews:
             return [.main, .reviews]
         case .showtime:
@@ -63,7 +63,6 @@ final class DetailsViewController: BaseViewController {
         button.setImage(.shareIcon(), for: .normal)
         button.tintColor = .white
         button.addTarget(self, action: #selector(share), for: .touchUpInside)
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
     }
     
@@ -71,12 +70,12 @@ final class DetailsViewController: BaseViewController {
 
 extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        currentType.cells.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = mainView.tableView.dequeueReusableCell(withIdentifier: currentType.cells[indexPath.row].cell.cellIdn(), for: indexPath) as? DetailsCell else { return UITableViewCell()}
-        cell.configure(model: viewModel.movie, genres: viewModel.genres, image: viewModel.image, cast: viewModel.cast ?? [Cast](), photos: viewModel.photos, videos: viewModel.videos)
+        cell.configure(model: viewModel)
         cell.selectionStyle = .none
         cell.tag = indexPath.row
         cell.delegate = self
@@ -88,10 +87,11 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 1 {
-            return UITableView.automaticDimension
-        }
-        return currentType.cells[indexPath.row].heightForRow
+        currentType.cells[indexPath.row].heightForRow
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        200
     }
 }
 
@@ -118,6 +118,20 @@ extension DetailsViewController: BaseViewModelDelegate, DetailsDelegate {
                 }
             }
         }
+    }
+    
+    func segmentValueChanged(sender: CustomSegmentControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            currentType = .detail
+        case 1:
+            currentType = .reviews
+        case 2:
+            currentType = .showtime
+        default:
+            break
+        }
+        reloadData()
     }
 }
 

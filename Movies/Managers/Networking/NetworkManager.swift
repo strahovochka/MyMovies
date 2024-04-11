@@ -162,4 +162,34 @@ class NetworkManager: NetworkProtocol {
             }
         }.resume()
     }
+    
+    func fetchReviews(with api: MoviesAPI, completition: @escaping (Response<[Review]>) -> Void) {
+        guard let url = URL(string: "\(baseURL)\(api.pass)\(api.queryParameters)") else { return }
+        let request = URLRequest(url: url)
+        var res = [Review]()
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
+                    if let reviewsResults = json?["results"] as? [[String: Any]] {
+                        for result in reviewsResults {
+                            if let authorDetails = result["author_details"] as? [String : Any]{
+                                if let name = authorDetails["name"] as? String,
+                                   let profilePath = authorDetails["avatar_path"] as? String?,
+                                   let rating = authorDetails["rating"] as? Double,
+                                   let content = result["content"] as? String,
+                                   let dateCreated = result["created_at"] as? String {
+                                    res.append(Review(name: name, profileImagePath: profilePath, content: content, dateCreated: dateCreated, rating: rating))
+                                }
+                            }
+                        }
+                        completition(.success(res))
+                    }
+                } catch {
+                    completition(.error(error.localizedDescription))
+                }
+            }
+        }.resume()
+    }
 }

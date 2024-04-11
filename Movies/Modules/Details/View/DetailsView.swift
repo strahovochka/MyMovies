@@ -18,6 +18,7 @@ class DetailsView: UIView {
         tableView.register(DetailsCellType.castAndCrew.cell)
         tableView.register(DetailsCellType.photos.cell)
         tableView.register(DetailsCellType.videos.cell)
+        tableView.register(DetailsCellType.reviews.cell)
         tableView.showsVerticalScrollIndicator = false
         tableView.backgroundColor = .clear
         return tableView

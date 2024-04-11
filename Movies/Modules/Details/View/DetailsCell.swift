@@ -13,7 +13,6 @@ enum DetailsCellType {
     case castAndCrew
     case photos
     case videos
-    case blogs
     case reviews
     case dateChoose
     case chooseCinema
@@ -27,10 +26,11 @@ enum DetailsCellType {
             return SynopsisCell.self
         case .castAndCrew:
             return CastTableViewCell.self
-        case .photos:
+        case .photos, .videos:
             return MediaCell.self
-        case .videos:
-            return MediaCell.self
+        case .reviews:
+            return ReviewsCell.self
+            
         default:
             return DetailsCell.self
         }
@@ -40,10 +40,14 @@ enum DetailsCellType {
         switch self {
         case .main:
             return 520
-        case .synopsis, .photos, .videos:
+        case .synopsis:
+            return UITableView.automaticDimension
+        case .photos, .videos:
             return 142
         case .castAndCrew:
             return 338
+        case .reviews:
+            return UITableView.automaticDimension
         default:
             return 100
         }
@@ -53,6 +57,8 @@ enum DetailsCellType {
 protocol DetailsDelegate {
     func showMoreToggled(start: Bool)
     func viewAll(ofType type: ViewAllOptions, scrollTo indexPath: IndexPath?)
+    func segmentValueChanged(sender: CustomSegmentControl)
+    func reloadData()
 }
 
 class DetailsCell: BaseTableViewCell {
@@ -68,7 +74,7 @@ class DetailsCell: BaseTableViewCell {
         super.layoutSubviews()
     }
     
-    func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
+    func configure(model: DetailsViewModel) {
         
     }
 }

@@ -57,9 +57,9 @@ class CastTableViewCell: DetailsCell {
         }
     }
     
-    override func configure(model: Movies, genres: [String] = [], image: UIImage = UIImage(), cast: [Cast] = [], photos: [UIImage]? = [], videos: [UIImage]? = []) {
+    override func configure(model: DetailsViewModel) {
         for i in 0..<4 {
-            if !cast.isEmpty {
+            if let cast = model.cast {
                 let member = cast[i]
                 let view = CastMemberView()
                 view.configure(with: member)

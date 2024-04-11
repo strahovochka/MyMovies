@@ -15,6 +15,7 @@ final class DetailsViewModel {
     private(set) var cast: [Cast]?
     private(set) var photos: [UIImage]?
     private(set) var videos: [UIImage]?
+    private(set) var reviews: [Review]?
     
     weak var delegate: BaseViewModelDelegate?
     
@@ -32,10 +33,8 @@ final class DetailsViewModel {
                 self.cast = cast
                 let urls = cast.map { URL(string: "\(MoviesAPI.poster($0.profilePath).pass)")}
                 self.loadImages(urls: urls) { images in
-                    if let images = images {
-                        for i in 0..<images.count {
-                            self.cast?[i].profileImage = images[i]
-                        }
+                    for i in 0..<images.count {
+                        self.cast?[i].profileImage = images[i]
                     }
                 }
             case .error(let descr):
@@ -48,7 +47,9 @@ final class DetailsViewModel {
             case .success(let photosPaths):
                 let urls = photosPaths.map { URL(string: "\(MoviesAPI.poster($0).pass)")}
                 self.loadImages(urls: urls) { images in
-                    self.photos = images
+                    if let images = images as? [UIImage] {
+                        self.photos = images
+                    }
                 }
             case .error(let descr):
                 print(descr)
@@ -60,8 +61,23 @@ final class DetailsViewModel {
             case .success(let keys):
                 let urls = keys.map { URL(string: "https://img.youtube.com/vi/\($0)/0.jpg") }
                 self.loadImages(urls: urls) { images in
-                    if let images = images {
+                    if let images = images as? [UIImage] {
                         self.videos = images
+                    }
+                }
+            case .error(let descr):
+                print(descr)
+            }
+        }
+        NetworkManager.shared.fetchReviews(with: .reviews(movie.id)) { [weak self] response in
+            guard let self = self else { return }
+            switch response {
+            case .success(let reviews):
+                self.reviews = reviews
+                let urls = reviews.map { URL(string: MoviesAPI.poster($0.profileImagePath ?? "").pass) }
+                self.loadImages(urls: urls) { images in
+                    for i in 0..<images.count {
+                        self.reviews?[i].profileImage = images[i]
                     }
                 }
             case .error(let descr):
@@ -81,8 +97,8 @@ final class DetailsViewModel {
         }
     }
     
-    func loadImages(urls: [URL?], completion: @escaping ([UIImage]?) -> Void) {
-        var loadedImages: [UIImage] = Array.init(repeating: UIImage(), count: urls.count)
+    func loadImages(urls: [URL?], completion: @escaping ([UIImage?]) -> Void) {
+        var loadedImages: [UIImage?] = Array.init(repeating: nil, count: urls.count)
         let dispatchGroup = DispatchGroup()
         
         for i in 0..<urls.count {
